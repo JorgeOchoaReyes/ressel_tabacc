@@ -4,20 +4,13 @@ import { DashboardLayout } from "~/components/layout/DashboardLayout";
 import { Tabs } from "~/components/tabs"; 
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
+import { Background_Lobby } from "~/components/layout/Background_Lobby";
 
 export default function Home(){   
   const router = useRouter();
   return (
     <DashboardLayout title="Lobby"> 
-      <video autoPlay muted loop style={{
-        "objectFit": "cover",   
-        "width": "100",
-        "height": "100",
-        "position": "fixed", 
-        "zIndex": "-1",
-      }}>         
-        <source src="./lobby-background.mp4" type="video/mp4"/>       
-      </video> 
+      <Background_Lobby />
       <div className="overflow-hidden">
         <FadeInSlide>
           <Button className="fixed top-5 left-5" variant={"ghost"} onClick={async () => {
@@ -28,7 +21,13 @@ export default function Home(){
           <div className="flex w-[100vw] h-[100vh] items-center justify-center content-center overflow">  
             <div className="flex flex-col gap-4 p-4 w-fit h-[600px] items-centers justify-start rounded-lg bg-gray-900/80">   
               <Tabs tabs={["Find game", "Create game", "Search Lobby"]} />
-
+              <Button onClick={async () => {
+                await router.push("/table/1");
+              } }
+              className="mt-auto"
+              >
+                Play game
+              </Button>
             </div>
           </div>
         </FadeInSlide>

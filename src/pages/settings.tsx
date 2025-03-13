@@ -4,19 +4,12 @@ import { FadeInSlide } from "~/components/animation/FadeInSlide";
 import { DashboardLayout } from "~/components/layout/DashboardLayout";
 import { Tabs } from "~/components/tabs";
 import { Button } from "~/components/ui/button";
+import { Background_Lobby } from "~/components/layout/Background_Lobby";
 
 export default function Home(){   
   return (
     <DashboardLayout title="Settings"> 
-      <video autoPlay muted loop style={{
-        "objectFit": "cover",   
-        "width": "100",
-        "height": "100",
-        "position": "fixed", 
-        "zIndex": "-1",
-      }}>         
-        <source src="./lobby-background.mp4" type="video/mp4"/>       
-      </video> 
+      <Background_Lobby />
       <div className="overflow-hidden">
         <FadeInSlide>
           <Button className="fixed top-5 left-5" variant={"ghost"} onClick={async () => {

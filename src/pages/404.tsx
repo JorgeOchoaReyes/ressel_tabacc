@@ -10,7 +10,7 @@ export default function FourOFour() {
                 404
               <br />
               <span className="text-base font-normal text-gray-500">
-                    Page Not Found
+                    Page Not Found :{"("}
               </span>
             </h1>
           </div>

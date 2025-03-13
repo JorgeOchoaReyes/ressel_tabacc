@@ -3,21 +3,14 @@ import { CrypticButton } from "~/components/button/CrypticButton";
 import { DashboardLayout } from "~/components/layout/DashboardLayout";
 import { useRouter } from "next/router";
 import { FadeInSlide } from "~/components/animation/FadeInSlide";
+import { Background_Lobby } from "~/components/layout/Background_Lobby";
 
 export default function Home(){   
   const router = useRouter();
 
   return (
     <DashboardLayout title="Lobby"> 
-      <video autoPlay muted loop style={{
-        "objectFit": "cover",   
-        "width": "100",
-        "height": "100",
-        "position": "fixed", 
-        "zIndex": "-1",
-      }}>         
-        <source src="./lobby-background.mp4" type="video/mp4"/>       
-      </video> 
+      <Background_Lobby />
       <FadeInSlide>
         <div className="flex flex-col gap-4 p-4 w-fit h-[300px] items-start fixed top-[250px] ml-[13%] rounded-lg bg-gray-900/70">   
           <hr />
