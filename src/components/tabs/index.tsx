@@ -32,8 +32,8 @@ export const Tabs: React.FC<{
         </Tab>
       ))}
 
-      <Cursor position={position} />
-      <Cursor position={chosenTabPosition} />
+      <Cursor position={position} chosenCursor={true} />
+      <Cursor position={chosenTabPosition} chosenCursor={false} />
     </ul>
   );
 };
@@ -81,13 +81,14 @@ const Tab = ({
   );
 };
 
-const Cursor = ({ position }: { position: Position }) => {
+const Cursor = ({ position, chosenCursor }: { position: Position, chosenCursor: boolean }) => {
+  const bg = chosenCursor ? "bg-slate-800" : "bg-black";
   return (
     <motion.li
       animate={{
         ...position,
       }}
-      className="absolute z-0 h-7 rounded-full bg-black md:h-12"
+      className={`absolute z-0 h-7 rounded-full md:h-12 ${bg}`}
     />
   );
 };

@@ -61,7 +61,7 @@ export const AuroraHero = () => {
           }}
           onClick={async () => {
             if (session) {
-              await router.push("/dashboard");
+              await router.push("/lobby");
               return;
             }
             await router.push("/sign-in");
