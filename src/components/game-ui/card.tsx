@@ -1,11 +1,9 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 export const Card: React.FC<{
-  stroke: string;
-  strokeWidth: number;
-}> = ({
-  stroke= "red",
-  strokeWidth=0
+  card?: string;
+}> = ({ 
 }) => {
   const sideLength = 200 / Math.sqrt(3);
   const height = 320;
@@ -19,10 +17,20 @@ export const Card: React.FC<{
       0,${height/2}
     `;
   const strokeLinejoin = "round";
+  const stroke = "red";
+  const strokeWidth = 0;
   
   return (
-    <svg width={width} height={height}>
-      <polygon points={points} fill={"red"} stroke={stroke} strokeWidth={strokeWidth} strokeLinejoin={strokeLinejoin} />
-    </svg>
+    <motion.div 
+      drag 
+      whileHover={{ scale: 1.1 }}
+      whileDrag={{ scale: 1.2, }}
+      dragMomentum = {false}
+      dragConstraints = {{ top: 0, left: 0, right: 0, bottom: 0 }} 
+    >
+      <svg width={width} height={height}>
+        <polygon points={points} fill={"red"} stroke={stroke} strokeWidth={strokeWidth} strokeLinejoin={strokeLinejoin} />
+      </svg>
+    </motion.div>
   );
 };
