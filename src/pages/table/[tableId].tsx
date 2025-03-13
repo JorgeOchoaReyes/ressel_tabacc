@@ -29,7 +29,7 @@ export default function Home(){
 
 
               <Chips />
-              <Card />
+              <Card stroke="red" strokeWidth={0} />
 
             </div>
           </div>
