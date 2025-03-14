@@ -1,13 +1,15 @@
 import React from "react";
+import { Card } from "./card";
 
 export const UserCards: React.FC = () => {
   return (
-    <div className="flex flex-row gap-4">
-      <div className="bg-gray-800 w-16 h-24 rounded-xl"></div>
-      <div className="bg-gray-800 w-16 h-24 rounded-xl"></div>
-      <div className="bg-gray-800 w-16 h-24 rounded-xl"></div>
-      <div className="bg-gray-800 w-16 h-24 rounded-xl"></div>
-      <div className="bg-gray-800 w-16 h-24 rounded-xl"></div>
-    </div>
+    <div className="flex flex-row gap-4 relative">  
+      <div className="absolute left-14 rotate-[10deg]"> 
+        <Card />
+      </div> 
+      <div className="rotate-[-10deg]"> 
+        <Card />
+      </div> 
+    </div> 
   );
 };
