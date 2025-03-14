@@ -4,8 +4,9 @@ export type Hand = {
     card_moon: string;
 }
 
-export type UserHand = {
+export type UserHandState = {
     player_id: string;
+    player_name: string;
     hand: Hand;
     tokens: number;
 }
@@ -13,6 +14,11 @@ export type UserHand = {
 export type Pot = {
     amount: number;
     player_id: string;
+}
+
+export type Player = {
+  player_id: string;
+  player_name: string; 
 }
 
 export type Move = {
@@ -36,24 +42,28 @@ export type RotationDirection = "clockwise" | "counter-clockwise";
 export type Ressel_Tabacc_Table = {
   table_name: string; 
   table_id: number;
+  table_creator_id: string;
+  table_creator_name: string;
+  table_password: string;
+  table_password_protected: boolean;
 
   turn: number;
   max_turns: number;
   round: number;
-
-  deck_sun: string[];
-  deck_moon: string[];
-  open_cards_sun: string[];
-  open_cards_moon: string[];
-
-  start_player_id: string;
-  players: string[];
+  moves: Move[];
   rotation_direction: RotationDirection;
   pot: Pot[];
-  user_hands: UserHand[];
-  moves: Move[];
+  user_hands_state: UserHandState[];
   game_state: GameState;
  
+
+  deck_sun: Sun_Card[];
+  deck_moon: Moon_Card[];
+  open_cards_sun: Sun_Card[];
+  open_cards_moon: Moon_Card[];
+
+  start_player_id: string;
+  players: Player[];
 };
  
 export const sun_cards = [
