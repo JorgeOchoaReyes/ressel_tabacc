@@ -7,6 +7,9 @@ export const Card: React.FC<{
   faceDown?: boolean;
   faceUp?: boolean;
 }> = ({ 
+  card,
+  faceDown,
+  faceUp,
 }) => {
   const sideLength = 100 / Math.sqrt(3);
   const height = 180;
@@ -22,6 +25,7 @@ export const Card: React.FC<{
   const strokeLinejoin = "round";
   const stroke = "black";
   const strokeWidth = 1;
+  const fill = faceUp ? "red" : faceDown ? "blue" : "white";
   
   return (
     <motion.svg  
@@ -34,7 +38,7 @@ export const Card: React.FC<{
       width={width} height={height}
     > 
       <motion.polygon  
-        points={points} fill={"red"} stroke={stroke} strokeWidth={strokeWidth} strokeLinejoin={strokeLinejoin} /> 
+        points={points} fill={fill} stroke={stroke} strokeWidth={strokeWidth} strokeLinejoin={strokeLinejoin} /> 
     </motion.svg>
   );
 };
