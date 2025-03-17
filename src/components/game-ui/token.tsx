@@ -1,15 +1,17 @@
 import React from "react"; 
+import { motion } from "framer-motion";
 
 export const Token: React.FC<{total?: number}> = ({
   total
 }) => {
   return (
-    <div className="flex flex-row gap-4 rounded-full w-[100px] h-[100px] bg-[#B5B7BB] items-center justify-center">
-      <div className="bg-orange-500 w-[70px] h-[70px] rounded-full flex items-center justify-center">
-        <p className="text-4xl font-bold text-slate-200">
-          {!total ? "" : total}
-        </p>
-      </div>
-    </div>
+    <motion.div
+      className="flex flex-row gap-1"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <img src="/deck/token.png" alt="token" className="w-32 h-32" />
+    </motion.div>
   );
 };
