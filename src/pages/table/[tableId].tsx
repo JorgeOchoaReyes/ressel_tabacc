@@ -6,13 +6,14 @@ import { Button } from "~/components/ui/button";
 import { Token } from "~/components/game-ui/token"; 
 import { UserCards } from "~/components/game-ui/user-cards";
 import { Deck } from "~/components/game-ui/deck";
+import { OpponentCards } from "~/components/game-ui/opponent-cards";
 
 export default function Home(){   
   const router = useRouter();
   const id = router.query.tableId;
   return (
     <DashboardLayout title="Table"> 
-      <div className="overflow-hidden bg-gray-900 ">
+      <div className="overflow-hidden bg-[#a17c3d] ">
         <FadeInSlide>
           <Button className="fixed top-5 left-5" variant={"ghost"} onClick={async () => {
             await router.push("/lobby");
@@ -26,8 +27,11 @@ export default function Home(){
                 Table {id}
               </h1> 
 
-              <div> 
+              <OpponentCards side="top" /> 
+              <div className="flex flex-row justify-around w-full"> 
+                <OpponentCards side="left" /> 
                 <Deck />
+                <OpponentCards side="right" /> 
               </div>
 
               <div className="flex flex-row gap-16 mt-auto"> 

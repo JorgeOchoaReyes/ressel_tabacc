@@ -70,16 +70,16 @@ export const sun_cards = [
   "sun_1", "sun_2", "sun_3", "sun_4", "sun_5", "sun_6", 
   "sun_1", "sun_2", "sun_3", "sun_4", "sun_5", "sun_6", 
   "sun_1", "sun_2", "sun_3", "sun_4", "sun_5", "sun_6", 
-  "sun_S", "sun_S", "sun_S",
-  "sun_Y"
+  "sun_imposter", "sun_imposter", "sun_imposter",
+  "sun_sylop"
 ]; 
-export type Sun_Card = "sun_1" | "sun_2" | "sun_3" | "sun_4" | "sun_5" | "sun_6" | "sun_S" | "sun_Y";
-
+export type Sun_Card = "sun_1" | "sun_2" | "sun_3" | "sun_4" | "sun_5" | "sun_6" | "sun_imposter" | "sun_sylop" | "sun_back";
+ 
 export const moon_cards = [
   "moon_1", "moon_2", "moon_3", "moon_4", "moon_5", "moon_6", 
   "moon_1", "moon_2", "moon_3", "moon_4", "moon_5", "moon_6", 
   "moon_1", "moon_2", "moon_3", "moon_4", "moon_5", "moon_6", 
-  "moon_S", "moon_S", "moon_S",
-  "moon_Y"
+  "moon_imposter", "moon_imposter", "moon_imposter",
+  "moon_sylop"
 ];
-export type Moon_Card = "moon_1" | "moon_2" | "moon_3" | "moon_4" | "moon_5" | "moon_6" | "moon_S" | "moon_Y";
+export type Moon_Card = "moon_1" | "moon_2" | "moon_3" | "moon_4" | "moon_5" | "moon_6" | "moon_imposter" | "moon_sylop" | "moon_back"; 
