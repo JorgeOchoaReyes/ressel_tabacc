@@ -1,7 +1,7 @@
 
 export type Hand = {
-    card_sun: string;
-    card_moon: string;
+    card_sun: Sun_Card;
+    card_moon: Moon_Card;
 }
 
 export type UserHandState = {
@@ -19,6 +19,7 @@ export type Pot = {
 export type Player = {
   player_id: string;
   player_name: string; 
+  position: "left" | "right" | "top" | "bottom";
 }
 
 export type Move = {
@@ -64,6 +65,7 @@ export type Ressel_Tabacc_Table = {
 
   start_player_id: string;
   players: Player[];
+  current_users_turn_id: string;
 };
  
 export const sun_cards = [
@@ -72,7 +74,7 @@ export const sun_cards = [
   "sun_1", "sun_2", "sun_3", "sun_4", "sun_5", "sun_6", 
   "sun_imposter", "sun_imposter", "sun_imposter",
   "sun_sylop"
-]; 
+] as Sun_Card[]; 
 export type Sun_Card = "sun_1" | "sun_2" | "sun_3" | "sun_4" | "sun_5" | "sun_6" | "sun_imposter" | "sun_sylop" | "sun_back";
  
 export const moon_cards = [
@@ -81,5 +83,5 @@ export const moon_cards = [
   "moon_1", "moon_2", "moon_3", "moon_4", "moon_5", "moon_6", 
   "moon_imposter", "moon_imposter", "moon_imposter",
   "moon_sylop"
-];
+] as Moon_Card[];
 export type Moon_Card = "moon_1" | "moon_2" | "moon_3" | "moon_4" | "moon_5" | "moon_6" | "moon_imposter" | "moon_sylop" | "moon_back"; 

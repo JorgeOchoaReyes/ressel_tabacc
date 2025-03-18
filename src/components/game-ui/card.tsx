@@ -50,6 +50,7 @@ export const Card: React.FC<{
         width={200}
         height={144} 
         alt="card"
+        className="unselectable"
       />
     </motion.div>  
   );
