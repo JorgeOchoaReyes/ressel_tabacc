@@ -9,6 +9,7 @@ export type UserHandState = {
     player_name: string;
     hand: Hand;
     tokens: number;
+    position: "left" | "right" | "top" | "bottom";
 }
 
 export type Pot = {

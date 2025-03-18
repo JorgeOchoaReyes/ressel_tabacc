@@ -2,17 +2,20 @@ import React from "react";
 import { motion } from "framer-motion";
 import { type Moon_Card, type Sun_Card } from "~/utils/classes";
 import Image from "next/image";
+import { StepForward } from "lucide-react";
 
 export const Card: React.FC<{
   card?: Sun_Card | Moon_Card | null;
   faceDown?: boolean;
   faceUp?: boolean;
   locked?: boolean;
+  deck_card?: boolean;
 }> = ({ 
   card, 
-  locked
+  locked,
+  deck_card=false
 }) => { 
-
+  const [hovering, setHovering] = React.useState(false);
   const backgroundImagePaths = {
     "sun_1":            "/deck/sand/1_sand.png",
     "sun_2":            "/deck/sand/1_sand.png",
@@ -35,15 +38,22 @@ export const Card: React.FC<{
     "moon_back":        "/deck/sun/back_sun.png",
   } as Record<Sun_Card | Moon_Card, string>;
   
+   
   
   return ( 
     <motion.div 
       drag={locked ? false : true}
       whileHover={{ scale: locked ? 1 : 1.1 }}
+      onHoverStart={() => {
+        setHovering(true);
+      }}
+      onHoverEnd={() => {
+        setHovering(false);
+      }}
       whileDrag={{ scale: locked ? 1 : 1.2, }}
       dragMomentum = {false}
       dragConstraints = {{ top: 0, left: 0, right: 0, bottom: 0 }} 
-      className="w-36 h-38 cursor-pointer object-cover"
+      className="w-36 h-38 cursor-pointer object-cover flex flex-col justify-center items-center"
     > 
       <Image
         src={backgroundImagePaths[card ?? "moon_back"] ?? "/deck/sand/back_sand.png"}  
@@ -52,6 +62,9 @@ export const Card: React.FC<{
         alt="card"
         className="unselectable"
       />
+      {
+        deck_card && <StepForward size={32} className={"rotate-[270deg]"} color={hovering ? "#9dfaee" : "white"}/> 
+      }
     </motion.div>  
   );
 };

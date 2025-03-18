@@ -50,6 +50,7 @@ export function useGameManager() {
     for(let i = 0; i < table.players.length; i++) {
       const player = table.players[playerIndex]; 
       if(!player) {
+        console.log("Player not found", playerIndex); 
         continue;
       }
       const starting_sunCard = sunCard.pop();
@@ -64,7 +65,8 @@ export function useGameManager() {
         hand: {
           card_sun: starting_sunCard,
           card_moon: starting_moonCard,
-        }
+        },
+        position: player.position,
       }; 
       playerHands.push(userHand);
       if(table.rotation_direction === "clockwise") {
@@ -74,7 +76,8 @@ export function useGameManager() {
           "top": "right",
           "right": "bottom",
         };
-        playerIndex = table.players.findIndex((player) => player.position === nextPlayer[player.position]);
+        const nextPlayerToFind = nextPlayer[player.position]; 
+        playerIndex = table.players.findIndex((player) => player.position === nextPlayerToFind);
       } else {
         const nextPlayer = {
           "bottom": "right",
@@ -82,7 +85,8 @@ export function useGameManager() {
           "top": "left",
           "left": "bottom",
         };
-        playerIndex = table.players.findIndex((player) => player.position === nextPlayer[player.position]);
+        const nextPlayerToFind = nextPlayer[player.position]; 
+        playerIndex = table.players.findIndex((player) => player.position === nextPlayerToFind);
       }
     }
 

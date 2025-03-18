@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "./card";
-import { type Moon_Card, type Sun_Card } from "~/utils/classes";
+import { type Moon_Card, type Sun_Card } from "~/utils/classes"; 
 
 export const Deck: React.FC<{
   openMoonCard: Moon_Card;
@@ -11,15 +11,15 @@ export const Deck: React.FC<{
 }
 ) => {
   return (
-    <div className="flex flex-row gap-4 mt-4">
-      <Card card={openMoonCard} />
+    <div className="flex flex-row gap-4 mt-2"> 
+      <Card card={openMoonCard} deck_card /> 
 
-      <div className="mt-8 flex flex-row gap-4"> 
-        <Card card="moon_back" />
-        <Card card="sun_back" />
+      <div className="mt-16 flex flex-row gap-"> 
+        <Card card="moon_back" deck_card />
+        <Card card="sun_back" deck_card />
       </div> 
        
-      <Card card={openSunCard} /> 
+      <Card card={openSunCard} deck_card /> 
     </div>
   );
 };
