@@ -1,15 +1,18 @@
+export type LTRB = "left" | "top" | "right" | "bottom";
+
 export const nextPlayer_clockwise = {
   "bottom": "right",
   "right": "top",
   "top": "left",
   "left": "bottom",
-};
+} as Record<LTRB, LTRB>;
 export const nextPlayer_counter_clockwise = {
   "bottom": "left",
   "left": "top",
   "top": "right",
   "right": "bottom",
-};
+} as Record<LTRB, LTRB>;
+
 export type Hand = {
     card_sun: Sun_Card;
     card_moon: Moon_Card;
