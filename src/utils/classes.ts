@@ -1,4 +1,15 @@
-
+export const nextPlayer_clockwise = {
+  "bottom": "right",
+  "right": "top",
+  "top": "left",
+  "left": "bottom",
+};
+export const nextPlayer_counter_clockwise = {
+  "bottom": "left",
+  "left": "top",
+  "top": "right",
+  "right": "bottom",
+};
 export type Hand = {
     card_sun: Sun_Card;
     card_moon: Moon_Card;
@@ -65,6 +76,8 @@ export type Ressel_Tabacc_Table = {
   open_cards_moon: Moon_Card[];
 
   start_player_id: string;
+  end_player_id: string;
+
   players: Player[];
   current_users_turn_id: string;
 };

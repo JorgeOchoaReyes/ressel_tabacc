@@ -16,7 +16,9 @@ export default function Home(){
 
   const {
     startGame,
-    table
+    table,
+    userStand,
+    playerLeave
   } = useGameManager(); 
 
   return (
@@ -36,6 +38,19 @@ export default function Home(){
           }}>
             <ArrowLeft size={64} />
           </Button> 
+          <div className="fixed top-5 right-[5rem] border-[#9dfaee] p-4 bg-[#302d25] h-24 w-80 rounded-xl"> 
+            <p className="text-[#9dfaee] text-start flex justify-between w-full">  
+              <div> Table ID: {id}    </div>         
+              <div> Turn {table?.turn ?? 0} / {table?.max_turns ?? 0} </div> 
+            </p>
+            <hr className="bg-[#9dfaee] h-[2px]" /> 
+            <p>
+              Round {table?.round ?? 0}
+            </p> 
+            <p>
+              Players turn: {table?.current_users_turn_id ?? 0}
+            </p>
+          </div>
           {
             table ? <div className="flex w-[100vw] h-[100vh] items-center justify-center content-center overflow">  
               <div className="flex flex-col gap-4 p-4 w-[100vw] h-[100vh] items-center justify-start rounded-lg overflow-hidden">
@@ -71,9 +86,16 @@ export default function Home(){
                       <Token /> 
                     </div>
                   </div>
-                  <PlayerOptions playerTurn={table.current_users_turn_id} isCurrentPlayersTurn={
-                    table.current_users_turn_id === "1"
-                  } />
+                  <PlayerOptions
+                    playerTurn={table.current_users_turn_id} 
+                    userStand={() => userStand(table.current_users_turn_id)}  
+                    playerLeave={async () => {
+                      await playerLeave(table.current_users_turn_id);
+                    }}
+                    isCurrentPlayersTurn={
+                      table.current_users_turn_id === "1"
+                    }
+                  />
                 </div> 
               </div>
             </div> :

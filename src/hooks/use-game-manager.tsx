@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import * as React from "react";
-import { type Ressel_Tabacc_Table, sun_cards, moon_cards, type Sun_Card, type Moon_Card, type UserHandState } from "~/utils/classes";
+import { useRouter } from "next/router";
+import { type Ressel_Tabacc_Table, sun_cards, moon_cards, type Sun_Card, type Moon_Card, type UserHandState, type Move, nextPlayer_clockwise, nextPlayer_counter_clockwise } from "~/utils/classes";
 
 export function useGameManager() {
   const [table, setTable] = React.useState<Ressel_Tabacc_Table | null>(null);
+  const router = useRouter();
 
   const startGame = () => {
     const table: Ressel_Tabacc_Table = {
@@ -31,6 +33,7 @@ export function useGameManager() {
       user_hands_state: [],
 
       start_player_id: "1",
+      end_player_id: "1",
       players: [
         { player_id: "1", player_name: "Player 1", position: "bottom" },
         { player_id: "2", player_name: "Player 2", position: "left" },
@@ -68,27 +71,17 @@ export function useGameManager() {
         },
         position: player.position,
       }; 
-      playerHands.push(userHand);
-      if(table.rotation_direction === "clockwise") {
-        const nextPlayer = {
-          "bottom": "left",
-          "left": "top",
-          "top": "right",
-          "right": "bottom",
-        };
-        const nextPlayerToFind = nextPlayer[player.position]; 
-        playerIndex = table.players.findIndex((player) => player.position === nextPlayerToFind);
-      } else {
-        const nextPlayer = {
-          "bottom": "right",
-          "right": "top",
-          "top": "left",
-          "left": "bottom",
-        };
-        const nextPlayerToFind = nextPlayer[player.position]; 
-        playerIndex = table.players.findIndex((player) => player.position === nextPlayerToFind);
-      }
+      playerHands.push(userHand); 
+      const orientation = table.rotation_direction === "clockwise" ? nextPlayer_clockwise : nextPlayer_counter_clockwise;
+      const nextPlayerToFind = orientation[player.position]; 
+      playerIndex = table.players.findIndex((player) => player.position === nextPlayerToFind);
+      
     }
+
+    const reverse_orientation = table.rotation_direction !== "clockwise" ? nextPlayer_clockwise : nextPlayer_counter_clockwise;
+    const findLastPlayer = reverse_orientation[table?.players[0]?.position ?? "bottom"];
+    const lastPlayer = table.players.find((player) => player.position === findLastPlayer);
+    table.end_player_id = lastPlayer?.player_id ?? "1";
 
     table.user_hands_state = playerHands;
 
@@ -104,8 +97,7 @@ export function useGameManager() {
     table.deck_sun = sunCard;
     table.deck_moon = moonCard;
 
-    setTable(table);
-
+    setTable(table); 
     console.log(table);
 
   };
@@ -115,25 +107,84 @@ export function useGameManager() {
     return shuffledDeck;
   };
 
+  const selectNewCard = (userId: string, card_sun: Sun_Card, card_moon: Moon_Card) => {
+    console.log("Select new card");
+  }; 
+ 
+  const userStand = (userId: string) => {
+    if(!table) {
+      alert("Table not found");
+      return;
+    } 
+    const copyTable = { ...table };
+    const userHand = table.user_hands_state.find((hand) => hand.player_id === userId);
+    if(!userHand) {
+      console.log("User hand not found");
+      return;
+    } 
+    const move: Move = {
+      player_id: userHand.player_id,
+      card_sun: userHand.hand.card_sun,
+      card_moon: userHand.hand.card_moon, 
+      new_card_sun: null,
+      new_card_moon: null,
+      action: "stand",
+      turn: copyTable.turn,
+      round: table.round,
+      tokens: userHand.tokens,
+      new_tokens: userHand.tokens,
+      timestamp: new Date().getTime(),
+    }; 
+    let turn = copyTable.turn; 
+    if(table.end_player_id === userId) {
+      turn++; 
+    }
+    copyTable.turn = turn;
+    copyTable.moves.push(move);
+    const orientation = copyTable.rotation_direction === "clockwise" ? nextPlayer_clockwise : nextPlayer_counter_clockwise;
+    const nextPlayerToFind = orientation[userHand.position];
+    const nextPlayer = copyTable.players.find((player) => player.position === nextPlayerToFind);
+    if(!nextPlayer) {
+      console.log("Next player not found");
+      return;
+    }
+    copyTable.current_users_turn_id = nextPlayer.player_id;
+
+    setTable(copyTable);
+  };
+
+  const playerLeave = async (userId: string) => {
+    if(!table) {
+      alert("Table not found");
+      return;
+    }
+    const copyTable = { ...table };
+    const playerIndex = copyTable?.players?.findIndex((player) => player.player_id === userId);
+    if(playerIndex === -1 || playerIndex === undefined) {
+      console.log("Player not found");
+      return;
+    }
+    copyTable?.players?.filter((player) => player.player_id !== userId);
+    copyTable?.user_hands_state?.filter((hand) => hand.player_id !== userId);
+
+    if(copyTable?.players?.length === 0) {
+      endGame();
+    } 
+    setTable(copyTable); 
+    await router.push("/lobby");
+  };
+
   const endGame = () => {
     console.log("Game ended");
-  };
+  };  
 
-  const nextTurn = () => {
-    console.log("Next turn");
-  };
-
-  const userMove = () => {
-    console.log("User move");
-  };
- 
   const userWon = () => {
     console.log("User won");
   };
 
   const userLost = () => {
     console.log("User lost");
-  }; 
-
-  return { table, startGame };
+  };  
+  return { table, startGame, userStand, playerLeave};
 };
+  
