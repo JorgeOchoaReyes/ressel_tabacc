@@ -5,9 +5,13 @@ import { Button } from "~/components/ui/button";
 export const PlayerOptions: React.FC<{
   playerTurn: string;
   isCurrentPlayersTurn: boolean;
+  userStand: () => void;
+  playerLeave: () => Promise<void>;
 }> = ({
   playerTurn,
-  isCurrentPlayersTurn
+  isCurrentPlayersTurn,
+  userStand,
+  playerLeave
 }) => {
   return (
     <div className="flex flex-col justify-center gap-4 border-2 border-[#9dfaee] p-4 bg-[#302d25] rounded-lg">
@@ -24,12 +28,16 @@ export const PlayerOptions: React.FC<{
       </Button>
       <Button 
         variant={"ghost"}
+        onClick={userStand}
         className="bg-[#8e8377] text-[#f5f5f5]"
       >   
         <SkipForward />
         Stand
       </Button>
       <Button 
+        onClick={async () => {
+          await playerLeave();
+        }}
         variant={"destructive"} 
       >  
         <DoorOpen /> Leave
