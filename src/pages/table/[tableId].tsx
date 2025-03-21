@@ -39,10 +39,10 @@ export default function Home(){
             <ArrowLeft size={64} />
           </Button> 
           <div className="fixed top-5 right-[5rem] border-[#9dfaee] p-4 bg-[#302d25] h-24 w-80 rounded-xl"> 
-            <p className="text-[#9dfaee] text-start flex justify-between w-full">  
+            <div className="text-[#9dfaee] text-start flex justify-between w-full">  
               <div> Table ID: {id}    </div>         
               <div> Turn {table?.turn ?? 0} / {table?.max_turns ?? 0} </div> 
-            </p>
+            </div>
             <hr className="bg-[#9dfaee] h-[2px]" /> 
             <p>
               Round {table?.round ?? 0}
@@ -54,22 +54,27 @@ export default function Home(){
           {
             table ? <div className="flex w-[100vw] h-[100vh] items-center justify-center content-center overflow">  
               <div className="flex flex-col gap-4 p-4 w-[100vw] h-[100vh] items-center justify-start rounded-lg overflow-hidden">
-                
+                 
                 <OpponentCards 
                   side="top" 
+                  playerLeft={!table.players.find((p) => p.player_id === "3")}
                   isCurrentPlayerTurn={table.current_users_turn_id === "3"}
-                  hand={table.user_hands_state.find((p) => p.position === "top")?.hand} /> 
+                  hand={table.user_hands_state.find((p) => p.position === "top")?.hand} />
+ 
 
-                <div className="flex flex-row justify-around w-full"> 
+                <div className="flex flex-row justify-around w-full">  
                   <OpponentCards 
-                    side="left"  
+                    side="left" 
+                    playerLeft={!table.players.find((p) => p.player_id === "2")}
                     isCurrentPlayerTurn={table.current_users_turn_id === "2"}
                     hand={table.user_hands_state.find((p) => p.position === "left")?.hand} /> 
                   <Deck 
                     openMoonCard={table.open_cards_moon[table.open_cards_moon.length - 1] ?? "moon_back"} 
                     openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"} />
+  
                   <OpponentCards 
                     side="right" 
+                    playerLeft={!table.players.find((p) => p.player_id === "4")}
                     isCurrentPlayerTurn={table.current_users_turn_id === "4"}
                     hand={table.user_hands_state.find((p) => p.position === "right")?.hand} /> 
                 </div> 

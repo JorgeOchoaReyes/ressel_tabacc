@@ -9,10 +9,12 @@ export const OpponentCards: React.FC<{
     card_moon: Moon_Card;
   },
   isCurrentPlayerTurn: boolean;
+  playerLeft?: boolean;
 }> = ({
   side,
   hand,
-  isCurrentPlayerTurn
+  isCurrentPlayerTurn,
+  playerLeft
 }) => {
   const rotate = {
     left: "rotate-[90deg]",
@@ -20,21 +22,25 @@ export const OpponentCards: React.FC<{
     top: "rotate-[180deg]",
     bottom: ""
   };
-  const border = isCurrentPlayerTurn ? "border-[#9dfaee]" : "border-[#000000]";
+  const border = (isCurrentPlayerTurn && !playerLeft) ? "border-[#9dfaee]" : "border-[#000000]";
+
+  const cardSun = playerLeft ? "sun_back" : hand?.card_sun ?? "sun_back";
+  const cardMoon = playerLeft ? "moon_back" : hand?.card_moon ?? "moon_back";
+
   return (               
     <div className={`flex flex-row gap-4 border-2 ${border} p-8 bg-[#808b5e] relative ${rotate[side]} rounded-lg`}>  
       <div className="absolute left-14 rotate-[10deg]"> 
         <Card 
           // faceDown
           // locked
-          card={hand?.card_sun ?? "sun_back"} 
+          card={cardSun} 
         />  
       </div> 
       <div className="rotate-[-10deg]"> 
         <Card 
           // faceDown
           // locked
-          card={hand?.card_moon ?? "moon_back"} 
+          card={cardMoon} 
         />
       </div> 
     </div> 
