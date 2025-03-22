@@ -131,8 +131,24 @@ export function useGameManager() {
     console.log("End round");
   };
 
-  const selectNewCard = (userId: string, open_card_moon: boolean, open_card_sun: boolean, deck_sun: boolean, deck_moon: boolean) => {
-    console.log("Select new card");
+  const selectDeckCard = (userId: string, deck_sun: boolean, deck_moon: boolean) => {
+    const deck = deck_sun ? table?.deck_sun : table?.deck_moon;
+    if(!deck) {
+      alert("Deck not found");
+      return;
+    }
+    const copyTable = { ...table };
+    const newCard = deck.pop();
+    if(!newCard) {
+      alert("No more cards in deck");
+      return;
+    }
+    if(deck_sun) {
+      copyTable.deck_sun = deck as Sun_Card[];
+    } else {
+      copyTable.deck_moon = deck as Moon_Card[];
+    }
+    return newCard;
   };
 
   const onConfirmNewCardSelection = (userId: string, newCardSun?: Sun_Card, newCardMoon?: Moon_Card) => {
@@ -220,6 +236,6 @@ export function useGameManager() {
   const userLost = () => {
     console.log("User lost");
   };  
-  return { table, startGame, userStand, playerLeave, selectNewCard };
+  return { table, startGame, userStand, playerLeave, selectDeckCard, onConfirmNewCardSelection };
 };
   

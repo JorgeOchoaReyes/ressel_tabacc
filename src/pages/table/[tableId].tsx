@@ -9,6 +9,20 @@ import { Deck } from "~/components/game-ui/deck";
 import { OpponentCards } from "~/components/game-ui/opponent-cards";
 import { useGameManager } from "~/hooks/use-game-manager";
 import { PlayerOptions } from "~/components/game-ui/player-options";
+import React from "react";
+import { Card } from "~/components/game-ui/card";
+import { motion } from "framer-motion";
+
+const imageStyle = {
+  backgroundImage: "url(/deck/table.png)",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat", 
+  backgroundColor: "rgba(255,255,255,0.3)",
+  backgroundBlendMode: "lighten"
+};
+
+type DivOrNull = HTMLDivElement | null;
 
 export default function Home(){   
   const router = useRouter();
@@ -19,28 +33,45 @@ export default function Home(){
     table,
     userStand,
     playerLeave,
-    selectNewCard
+    selectDeckCard,
+    onConfirmNewCardSelection
   } = useGameManager(); 
 
   const userActive = table?.current_users_turn_id === "1";
 
+  const refOpenMoonCardComponent = React.useRef<DivOrNull>(null);
+  const refOpenSunCardComponent = React.useRef<DivOrNull>(null);
+  const refDeckSunCardComponent = React.useRef<DivOrNull>(null);
+  const refDeckMoonCardComponent = React.useRef<DivOrNull>(null);
+  
+  const refUserSunCardComponent = React.useRef<DivOrNull>(null);
+  const refUserMoonCardComponent = React.useRef<DivOrNull>(null);
+
+  const freeCardRef = React.useRef<DivOrNull>(null);
+
+  const onClickDeckMoveFreeCardToDeckCArd = () => {
+    console.log("Moving free card to deck card");
+    console.log(freeCardRef.current);
+    console.log(refDeckSunCardComponent.current);
+    if(freeCardRef.current && refDeckSunCardComponent.current) {  
+      
+      // move free card to deck card
+      refDeckSunCardComponent.current.appendChild(freeCardRef.current);
+      
+    } else {
+      alert("No ref");
+    }
+  };
+
   return (
     <DashboardLayout title="Table"> 
-      <div className="overflow-hidden bg-[#a17c3d]" style={{
-        backgroundImage: "url(/deck/table.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat", 
-        backgroundColor: "rgba(255,255,255,0.3)",
-        backgroundBlendMode: "lighten"
-      }}>
-
+      <div className="overflow-hidden bg-[#a17c3d]" style={imageStyle}> 
         <FadeInSlide>
           <Button className="fixed top-5 left-5" variant={"ghost"} onClick={async () => {
             await router.push("/lobby");
           }}>
             <ArrowLeft size={64} />
-          </Button> 
+          </Button>  
           <div className="fixed top-5 right-[5rem] border-[#9dfaee] p-4 bg-[#302d25] h-24 w-80 rounded-xl"> 
             <div className="text-[#9dfaee] text-start flex justify-between w-full">  
               <div> Table ID: {id}    </div>         
@@ -56,8 +87,7 @@ export default function Home(){
           </div>
           {
             table ? <div className="flex w-[100vw] h-[100vh] items-center justify-center content-center overflow">  
-              <div className="flex flex-col gap-4 p-4 w-[100vw] h-[100vh] items-center justify-start rounded-lg overflow-hidden">
-                 
+              <div className="flex flex-col gap-4 p-4 w-[100vw] h-[100vh] items-center justify-start rounded-lg overflow-hidden"> 
                 <OpponentCards 
                   side="top" 
                   playerLeft={!table.players.find((p) => p.player_id === "3")}
@@ -71,8 +101,13 @@ export default function Home(){
                     isCurrentPlayerTurn={table.current_users_turn_id === "2"}
                     hand={table.user_hands_state.find((p) => p.position === "left")?.hand} /> 
                   <Deck 
+                    refOpenMoonCardComponent={refOpenMoonCardComponent}
+                    refOpenSunCardComponent={refOpenSunCardComponent}
+                    refDeckSunCardComponent={refDeckSunCardComponent}
+                    refDeckMoonCardComponent={refDeckMoonCardComponent} 
                     openMoonCard={table.open_cards_moon[table.open_cards_moon.length - 1] ?? "moon_back"} 
                     openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"} 
+                    selectDeckCard={selectDeckCard}
                   />
                   <OpponentCards 
                     side="right" 
@@ -83,12 +118,14 @@ export default function Home(){
 
                 <div className="flex flex-row gap-4 mt-auto">  
                   <div className={`flex flex-row gap-16 mt-auto border-2 ${userActive ? "border-[#9dfaee]" : "border-black"} bg-[#808b5e] rounded-xl p-4`}> 
-                    <UserCards userHand={table.user_hands_state.find(
-                      (hand) => hand.player_id === "1"
-                    )?.hand ?? {
-                      card_moon: "moon_back",
-                      card_sun: "sun_back"
-                    }} />
+                    <UserCards 
+                      userHand={table.user_hands_state.find((hand) => hand.player_id === "1")?.hand ?? {
+                        card_moon: "moon_back",
+                        card_sun: "sun_back"
+                      }}
+                      refUserSunCardComponent={refUserSunCardComponent}
+                      refUserMoonCardComponent={refUserMoonCardComponent} 
+                    />
                     <div className="flex flex-row mt-auto"> 
                       <Token /> 
                     </div>
@@ -114,7 +151,19 @@ export default function Home(){
               </div>
           } 
         </FadeInSlide>
-        <Button onClick={startGame} className="fixed bottom-5 right-5">
+        {
+          // Free Card Space
+          <motion.div 
+            ref={freeCardRef} 
+            drag 
+            dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          >
+            <Card card="moon_sylop" />
+          </motion.div>
+        }
+        <Button onClick={() => {
+          onClickDeckMoveFreeCardToDeckCArd();
+        }} className="fixed bottom-5 right-5">
           Start game
         </Button>
       </div>

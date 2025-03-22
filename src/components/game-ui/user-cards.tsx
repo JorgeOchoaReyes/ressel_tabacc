@@ -4,6 +4,8 @@ import { type Hand } from "~/utils/classes";
 
 export const UserCards: React.FC<{
   userHand: Hand;
+  refUserSunCardComponent: React.MutableRefObject<HTMLDivElement | null>; 
+  refUserMoonCardComponent: React.MutableRefObject<HTMLDivElement | null>;  
 }> = (
   { userHand }
 ) => {
