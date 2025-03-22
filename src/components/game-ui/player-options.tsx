@@ -5,16 +5,18 @@ import { Button } from "~/components/ui/button";
 export const PlayerOptions: React.FC<{
   playerTurn: string;
   isCurrentPlayersTurn: boolean;
+  userActive: boolean;
   userStand: () => void;
   playerLeave: () => Promise<void>;
 }> = ({
   playerTurn,
   isCurrentPlayersTurn,
+  userActive,
   userStand,
   playerLeave
 }) => {
   return (
-    <div className="flex flex-col justify-center gap-4 border-2 border-[#9dfaee] p-4 bg-[#302d25] rounded-lg">
+    <div className={`flex flex-col justify-center gap-4 border-2 ${userActive ? "border-[#9dfaee]" : "border-black"} p-4 bg-[#302d25] rounded-lg`}>
       <p className="text-[#9dfaee] text-center">
         {
           isCurrentPlayersTurn ? "Your turn" : "Opponent's turn"

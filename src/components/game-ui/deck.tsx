@@ -11,7 +11,7 @@ export const Deck: React.FC<{
 }
 ) => {
   return (
-    <div className="flex flex-row gap-4 mt-2"> 
+    <div className="flex flex-row gap-4 bg-slate-500 rounded-lg p-1"> 
       <Card card={openMoonCard} deck_card /> 
 
       <div className="mt-16 flex flex-row gap-"> 
