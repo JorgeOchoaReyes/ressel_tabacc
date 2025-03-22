@@ -10,10 +10,10 @@ export const UserCards: React.FC<{
   return (
     <div className="flex flex-row gap-4 relative">  
       <div className="absolute left-14 rotate-[10deg]"> 
-        <Card card={userHand.card_moon} />
+        <Card card={userHand.card_sun} />
       </div> 
       <div className="rotate-[-10deg]"> 
-        <Card card={userHand.card_sun} />
+        <Card card={userHand.card_moon} />
       </div> 
     </div> 
   );

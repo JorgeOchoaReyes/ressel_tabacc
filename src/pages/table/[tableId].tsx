@@ -18,8 +18,11 @@ export default function Home(){
     startGame,
     table,
     userStand,
-    playerLeave
+    playerLeave,
+    selectNewCard
   } = useGameManager(); 
+
+  const userActive = table?.current_users_turn_id === "1";
 
   return (
     <DashboardLayout title="Table"> 
@@ -60,7 +63,6 @@ export default function Home(){
                   playerLeft={!table.players.find((p) => p.player_id === "3")}
                   isCurrentPlayerTurn={table.current_users_turn_id === "3"}
                   hand={table.user_hands_state.find((p) => p.position === "top")?.hand} />
- 
 
                 <div className="flex flex-row justify-around w-full">  
                   <OpponentCards 
@@ -70,8 +72,8 @@ export default function Home(){
                     hand={table.user_hands_state.find((p) => p.position === "left")?.hand} /> 
                   <Deck 
                     openMoonCard={table.open_cards_moon[table.open_cards_moon.length - 1] ?? "moon_back"} 
-                    openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"} />
-  
+                    openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"} 
+                  />
                   <OpponentCards 
                     side="right" 
                     playerLeft={!table.players.find((p) => p.player_id === "4")}
@@ -80,7 +82,7 @@ export default function Home(){
                 </div> 
 
                 <div className="flex flex-row gap-4 mt-auto">  
-                  <div className="flex flex-row gap-16 mt-auto border-2 border-[#9dfaee] bg-[#808b5e] rounded-xl p-4"> 
+                  <div className={`flex flex-row gap-16 mt-auto border-2 ${userActive ? "border-[#9dfaee]" : "border-black"} bg-[#808b5e] rounded-xl p-4`}> 
                     <UserCards userHand={table.user_hands_state.find(
                       (hand) => hand.player_id === "1"
                     )?.hand ?? {
@@ -94,6 +96,7 @@ export default function Home(){
                   <PlayerOptions
                     playerTurn={table.current_users_turn_id} 
                     userStand={() => userStand(table.current_users_turn_id)}  
+                    userActive={userActive}
                     playerLeave={async () => {
                       await playerLeave(table.current_users_turn_id);
                     }}

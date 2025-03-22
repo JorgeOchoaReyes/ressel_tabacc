@@ -134,6 +134,10 @@ export function useGameManager() {
   const selectNewCard = (userId: string, open_card_moon: boolean, open_card_sun: boolean, deck_sun: boolean, deck_moon: boolean) => {
     console.log("Select new card");
   };
+
+  const onConfirmNewCardSelection = (userId: string, newCardSun?: Sun_Card, newCardMoon?: Moon_Card) => {
+    console.log("Confirm new card selection");
+  };
  
   const userStand = (userId: string) => {
     if(!table) {
@@ -216,6 +220,6 @@ export function useGameManager() {
   const userLost = () => {
     console.log("User lost");
   };  
-  return { table, startGame, userStand, playerLeave};
+  return { table, startGame, userStand, playerLeave, selectNewCard };
 };
   

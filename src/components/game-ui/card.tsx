@@ -57,8 +57,8 @@ export const Card: React.FC<{
     > 
       <Image
         src={backgroundImagePaths[card ?? "moon_back"] ?? "/deck/sand/back_sand.png"}  
-        width={200}
-        height={144} 
+        width={120}
+        height={100} 
         alt="card"
         className="unselectable"
       />
