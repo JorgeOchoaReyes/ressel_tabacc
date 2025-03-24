@@ -11,11 +11,13 @@ export const Card: React.FC<{
   locked?: boolean;
   deck_card?: boolean;
   _ref?: React.MutableRefObject<HTMLDivElement | null>;
+  onClickDeckCards?: () => void;
 }> = ({ 
   card, 
   locked,
   deck_card=false,
-  _ref
+  _ref,
+  onClickDeckCards
 }) => { 
   const [hovering, setHovering] = React.useState(false);
   const backgroundImagePaths = {
@@ -55,6 +57,7 @@ export const Card: React.FC<{
       dragMomentum = {false}
       dragConstraints = {{ top: 0, left: 0, right: 0, bottom: 0 }} 
       className="w-36 h-38 cursor-pointer object-cover flex flex-col justify-center items-center"
+      onClick={() => onClickDeckCards && onClickDeckCards()}
     > 
       <Image
         src={backgroundImagePaths[card ?? "moon_back"] ?? "/deck/sand/back_sand.png"}  

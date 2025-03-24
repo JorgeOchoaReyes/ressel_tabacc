@@ -102,3 +102,5 @@ export const moon_cards = [
   "moon_sylop"
 ] as Moon_Card[];
 export type Moon_Card = "moon_1" | "moon_2" | "moon_3" | "moon_4" | "moon_5" | "moon_6" | "moon_imposter" | "moon_sylop" | "moon_back"; 
+
+export type DivOrNull = HTMLDivElement | null;

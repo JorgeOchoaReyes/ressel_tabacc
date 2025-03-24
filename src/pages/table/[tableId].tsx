@@ -12,6 +12,8 @@ import { PlayerOptions } from "~/components/game-ui/player-options";
 import React from "react";
 import { Card } from "~/components/game-ui/card";
 import { motion } from "framer-motion";
+import type { DivOrNull } from "~/utils/classes";
+import { onClickDeckMoveFreeCardToDeckCard} from "~/utils/motions";
 
 const imageStyle = {
   backgroundImage: "url(/deck/table.png)",
@@ -21,8 +23,6 @@ const imageStyle = {
   backgroundColor: "rgba(255,255,255,0.3)",
   backgroundBlendMode: "lighten"
 };
-
-type DivOrNull = HTMLDivElement | null;
 
 export default function Home(){   
   const router = useRouter();
@@ -42,26 +42,11 @@ export default function Home(){
   const refOpenMoonCardComponent = React.useRef<DivOrNull>(null);
   const refOpenSunCardComponent = React.useRef<DivOrNull>(null);
   const refDeckSunCardComponent = React.useRef<DivOrNull>(null);
-  const refDeckMoonCardComponent = React.useRef<DivOrNull>(null);
-  
+  const refDeckMoonCardComponent = React.useRef<DivOrNull>(null); 
   const refUserSunCardComponent = React.useRef<DivOrNull>(null);
-  const refUserMoonCardComponent = React.useRef<DivOrNull>(null);
-
+  const refUserMoonCardComponent = React.useRef<DivOrNull>(null); 
   const freeCardRef = React.useRef<DivOrNull>(null);
 
-  const onClickDeckMoveFreeCardToDeckCArd = () => {
-    console.log("Moving free card to deck card");
-    console.log(freeCardRef.current);
-    console.log(refDeckSunCardComponent.current);
-    if(freeCardRef.current && refDeckSunCardComponent.current) {  
-      
-      // move free card to deck card
-      refDeckSunCardComponent.current.appendChild(freeCardRef.current);
-      
-    } else {
-      alert("No ref");
-    }
-  };
 
   return (
     <DashboardLayout title="Table"> 
@@ -106,8 +91,24 @@ export default function Home(){
                     refDeckSunCardComponent={refDeckSunCardComponent}
                     refDeckMoonCardComponent={refDeckMoonCardComponent} 
                     openMoonCard={table.open_cards_moon[table.open_cards_moon.length - 1] ?? "moon_back"} 
-                    openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"} 
-                    selectDeckCard={selectDeckCard}
+                    openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"}  
+                    onClickDeckCards={(sun?: boolean, moon?: boolean) => {
+                      if(sun) {
+                        onClickDeckMoveFreeCardToDeckCard(
+                          "deck_sun_card",
+                          refDeckSunCardComponent,
+                          refDeckMoonCardComponent, 
+                          freeCardRef 
+                        );
+                      } else if(moon) {
+                        onClickDeckMoveFreeCardToDeckCard(
+                          "deck_moon_card",
+                          refDeckSunCardComponent,
+                          refDeckMoonCardComponent, 
+                          freeCardRef 
+                        );
+                      }
+                    }}
                   />
                   <OpponentCards 
                     side="right" 
@@ -156,16 +157,13 @@ export default function Home(){
           <motion.div 
             ref={freeCardRef} 
             drag 
+            className="absolute"
+            style={{ display: "none" }}
             dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
           >
             <Card card="moon_sylop" />
           </motion.div>
-        }
-        <Button onClick={() => {
-          onClickDeckMoveFreeCardToDeckCArd();
-        }} className="fixed bottom-5 right-5">
-          Start game
-        </Button>
+        } 
       </div>
     </DashboardLayout>
   );

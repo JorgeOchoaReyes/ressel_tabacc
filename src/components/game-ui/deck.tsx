@@ -8,12 +8,12 @@ export const Deck: React.FC<{
   refOpenMoonCardComponent: React.MutableRefObject<HTMLDivElement | null>;
   refOpenSunCardComponent: React.MutableRefObject<HTMLDivElement | null>;
   refDeckSunCardComponent: React.MutableRefObject<HTMLDivElement | null>;
-  refDeckMoonCardComponent: React.MutableRefObject<HTMLDivElement | null>;
-  selectDeckCard:(userId: string, deck_sun: boolean, deck_moon: boolean) => Moon_Card | Sun_Card | undefined;
+  refDeckMoonCardComponent: React.MutableRefObject<HTMLDivElement | null>; 
+  onClickDeckCards: (sun?: boolean, moon?: boolean) => void;
 }> = ({ 
   openMoonCard,
   openSunCard,
-  selectDeckCard, 
+  onClickDeckCards, 
   refOpenMoonCardComponent,
   refOpenSunCardComponent,
   refDeckSunCardComponent,
@@ -25,8 +25,18 @@ export const Deck: React.FC<{
       <Card card={openMoonCard} deck_card _ref={refOpenMoonCardComponent} /> 
 
       <div className="mt-16 flex flex-row gap-"> 
-        <Card card="moon_back" deck_card _ref={refDeckSunCardComponent} />
-        <Card card="sun_back" deck_card _ref={refDeckMoonCardComponent} />
+        <Card 
+          card="moon_back" 
+          deck_card 
+          _ref={refDeckSunCardComponent} 
+          onClickDeckCards={() => onClickDeckCards(true, false)}
+        />
+        <Card 
+          card="sun_back" 
+          deck_card 
+          _ref={refDeckMoonCardComponent} 
+          onClickDeckCards={() => onClickDeckCards(false, true)}
+        />
       </div> 
        
       <Card card={openSunCard} deck_card _ref={refOpenSunCardComponent} /> 
