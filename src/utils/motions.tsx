@@ -19,8 +19,8 @@ export const onClickDeckMoveFreeCardToDeckCard = (
       alert("Invalid card to hover");
   }
   if(freeCardRef.current) { 
-    freeCardRef.current.style.top = `${rect.top}px`;
-    freeCardRef.current.style.left = `${rect.left}px`;
+    freeCardRef.current.style.top = `${rect.top+12.5}px`;
+    freeCardRef.current.style.left = `${rect.left+8}px`;
     freeCardRef.current.style.right = `${rect.right}px`;
     freeCardRef.current.style.bottom = `${rect.bottom}px`; 
     freeCardRef.current.style.display = "";
@@ -29,3 +29,16 @@ export const onClickDeckMoveFreeCardToDeckCard = (
   }
 };
 
+export const freeCardHideAndOutOfWindowView = (
+  freeCardRef: React.MutableRefObject<DivOrNull>,
+) => {
+  if(freeCardRef.current) {
+    freeCardRef.current.style.display = "none";
+    freeCardRef.current.style.top = "-1000px";
+    freeCardRef.current.style.left = "-1000px";
+    freeCardRef.current.style.right = "-1000px";
+    freeCardRef.current.style.bottom = "-1000px";
+  } else {
+    alert("Free card ref not found");
+  }
+};

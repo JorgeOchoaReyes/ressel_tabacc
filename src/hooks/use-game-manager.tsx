@@ -145,14 +145,74 @@ export function useGameManager() {
     }
     if(deck_sun) {
       copyTable.deck_sun = deck as Sun_Card[];
-    } else {
+    } else if(deck_moon) {
       copyTable.deck_moon = deck as Moon_Card[];
     }
     return newCard;
   };
 
-  const onConfirmNewCardSelection = (userId: string, newCardSun?: Sun_Card, newCardMoon?: Moon_Card) => {
-    console.log("Confirm new card selection");
+  const onConfirmNewCardSelection = (
+    player_id: string, 
+    newCardSun?: Sun_Card, 
+    newCardMoon?: Moon_Card,
+    from?: "deck_sun" | "deck_moon" | "open_sun" | "open_moon",
+  ) => {
+    if(!table) {
+      alert("Table not found");
+      return;
+    }
+    const userHand = table.user_hands_state.find((hand) => hand.player_id === player_id);
+    if(!userHand) {
+      console.log("User hand not found");
+      return;
+    }
+    const move: Move = {
+      player_id: player_id,
+      prev_card_sun: userHand.hand.card_sun,
+      prev_card_moon: userHand.hand.card_moon,
+      new_card_sun: newCardSun ?? null,
+      new_card_moon: newCardMoon ?? null,
+      action: (from === "deck_sun" || from === "deck_moon") ? "select_new_card" : "select_open_card",
+      turn: table.turn,
+      round: table.round,
+      tokens: 0,
+      new_tokens: 1,
+      timestamp: new Date().getTime(),
+    };
+
+    const copyTable = { ...table };
+
+    // Update Open Cards
+    if(newCardSun && move.prev_card_sun) {
+      copyTable.open_cards_sun.push(move.prev_card_sun as Sun_Card);
+    } else if(newCardMoon) {
+      copyTable.open_cards_moon.push(move.prev_card_moon as Moon_Card);
+    }
+
+    copyTable.user_hands_state = copyTable.user_hands_state.map((hand) => {
+      if(hand.player_id === player_id) {
+        return {
+          ...hand,
+          hand: {
+            card_sun: newCardSun ?? hand.hand.card_sun,
+            card_moon: newCardMoon ?? hand.hand.card_moon,
+          },
+        };
+      }
+      return hand;
+    }); 
+
+    copyTable.moves.push(move); 
+
+    const nextPlayer = searchForNextPlayer(copyTable.rotation_direction, userHand?.position ?? "bottom", copyTable);
+    if(!nextPlayer) {
+      console.log("Next player not found");
+      return;
+    }
+    copyTable.current_users_turn_id = nextPlayer.player_id;
+    copyTable.turn++; 
+    setTable(copyTable);
+
   };
  
   const userStand = (userId: string) => {
@@ -168,8 +228,8 @@ export function useGameManager() {
     } 
     const move: Move = {
       player_id: userHand.player_id,
-      card_sun: userHand.hand.card_sun,
-      card_moon: userHand.hand.card_moon, 
+      prev_card_sun: userHand.hand.card_sun,
+      prev_card_moon: userHand.hand.card_moon, 
       new_card_sun: null,
       new_card_moon: null,
       action: "stand",

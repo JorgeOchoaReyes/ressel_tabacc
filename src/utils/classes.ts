@@ -39,8 +39,8 @@ export type Player = {
 
 export type Move = {
     player_id: string;
-    card_sun: string;
-    card_moon: string;
+    prev_card_sun: string;
+    prev_card_moon: string;
     new_card_sun: string | null;
     new_card_moon: string | null;
     action: "select_new_card" | "select_open_card" | "stand";

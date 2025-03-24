@@ -24,18 +24,18 @@ export const Deck: React.FC<{
     <div className="flex flex-row gap-4 bg-slate-500 rounded-lg p-1"> 
       <Card card={openMoonCard} deck_card _ref={refOpenMoonCardComponent} /> 
 
-      <div className="mt-16 flex flex-row gap-"> 
+      <div className="mt-16 flex flex-row"> 
         <Card 
           card="moon_back" 
           deck_card 
-          _ref={refDeckSunCardComponent} 
-          onClickDeckCards={() => onClickDeckCards(true, false)}
+          _ref={refDeckMoonCardComponent} 
+          onClickDeckCards={() => onClickDeckCards(false, true)}
         />
         <Card 
           card="sun_back" 
           deck_card 
-          _ref={refDeckMoonCardComponent} 
-          onClickDeckCards={() => onClickDeckCards(false, true)}
+          _ref={refDeckSunCardComponent} 
+          onClickDeckCards={() => onClickDeckCards(true, false)}
         />
       </div> 
        
