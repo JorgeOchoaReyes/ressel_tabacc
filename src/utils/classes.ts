@@ -39,8 +39,8 @@ export type Player = {
 
 export type Move = {
     player_id: string;
-    card_sun: string;
-    card_moon: string;
+    prev_card_sun: string;
+    prev_card_moon: string;
     new_card_sun: string | null;
     new_card_moon: string | null;
     action: "select_new_card" | "select_open_card" | "stand";
@@ -102,3 +102,5 @@ export const moon_cards = [
   "moon_sylop"
 ] as Moon_Card[];
 export type Moon_Card = "moon_1" | "moon_2" | "moon_3" | "moon_4" | "moon_5" | "moon_6" | "moon_imposter" | "moon_sylop" | "moon_back"; 
+
+export type DivOrNull = HTMLDivElement | null;

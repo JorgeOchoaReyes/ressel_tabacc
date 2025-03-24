@@ -10,10 +10,16 @@ export const Card: React.FC<{
   faceUp?: boolean;
   locked?: boolean;
   deck_card?: boolean;
+  _ref?: React.MutableRefObject<HTMLDivElement | null>;
+  onClickDeckCards?: () => void;
+  onClickOnSelectingCard?: (card: (Sun_Card | Moon_Card)) => void;
 }> = ({ 
   card, 
   locked,
-  deck_card=false
+  deck_card=false,
+  _ref,
+  onClickDeckCards,
+  onClickOnSelectingCard
 }) => { 
   const [hovering, setHovering] = React.useState(false);
   const backgroundImagePaths = {
@@ -38,10 +44,9 @@ export const Card: React.FC<{
     "moon_back":        "/deck/sun/back_sun.png",
   } as Record<Sun_Card | Moon_Card, string>;
   
-   
-  
   return ( 
     <motion.div 
+      ref={_ref}
       drag={locked ? false : true}
       whileHover={{ scale: locked ? 1 : 1.1 }}
       onHoverStart={() => {
@@ -54,6 +59,14 @@ export const Card: React.FC<{
       dragMomentum = {false}
       dragConstraints = {{ top: 0, left: 0, right: 0, bottom: 0 }} 
       className="w-36 h-38 cursor-pointer object-cover flex flex-col justify-center items-center"
+      onClick={() => {
+        if(onClickDeckCards)  onClickDeckCards();
+        if(onClickOnSelectingCard)  {
+          onClickOnSelectingCard(
+            card ?? "moon_back"
+          );
+        }
+      }}
     > 
       <Image
         src={backgroundImagePaths[card ?? "moon_back"] ?? "/deck/sand/back_sand.png"}  

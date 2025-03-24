@@ -8,3 +8,4 @@ export const shuffle = (): {
   const shuffled_moon = moon_cards.sort(() => Math.random() - 0.5);
   return { deck_sun: shuffled_sun, deck_moon: shuffled_moon };
 }; 
+
