@@ -1,6 +1,7 @@
-import { ArrowUp, DoorOpen, SkipForward } from "lucide-react";
+import { ArrowUp, Check, DoorOpen, SkipForward } from "lucide-react";
 import React from "react";
 import { Button } from "~/components/ui/button";
+import { type Sun_Card, type Moon_Card } from "~/utils/classes";
 
 export const PlayerOptions: React.FC<{
   playerTurn: string;
@@ -8,12 +9,18 @@ export const PlayerOptions: React.FC<{
   userActive: boolean;
   userStand: () => void;
   playerLeave: () => Promise<void>;
+  selectingACard: boolean;
+  onConfirmNewCardSelection: () => void;
+  cardSelecting?: Sun_Card | Moon_Card;
 }> = ({
   playerTurn,
   isCurrentPlayersTurn,
   userActive,
   userStand,
-  playerLeave
+  playerLeave,
+  selectingACard,
+  cardSelecting,
+  onConfirmNewCardSelection
 }) => {
   return (
     <div className={`flex flex-col justify-center gap-4 border-2 ${userActive ? "border-[#9dfaee]" : "border-black"} p-4 bg-[#302d25] rounded-lg`}>
@@ -25,8 +32,17 @@ export const PlayerOptions: React.FC<{
       <Button 
         variant={"ghost"}
         className="bg-[#8e8377] text-[#f5f5f5]"
+        onClick={  () => {
+          onConfirmNewCardSelection(); 
+        }}
       >
-        <ArrowUp /> Select a card
+        {
+          !selectingACard ? <>
+            <ArrowUp /> Select a card
+          </> : <>
+            <Check /> Confirm selection of {cardSelecting}
+          </>
+        }
       </Button>
       <Button 
         variant={"ghost"}
