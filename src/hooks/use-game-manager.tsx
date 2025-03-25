@@ -129,33 +129,13 @@ export function useGameManager() {
 
   const endRound = () => {
     console.log("End round");
-  };
-
-  const selectDeckCard = (userId: string, deck_sun: boolean, deck_moon: boolean) => {
-    const deck = deck_sun ? table?.deck_sun : table?.deck_moon;
-    if(!deck) {
-      alert("Deck not found");
-      return;
-    }
-    const copyTable = { ...table };
-    const newCard = deck.pop();
-    if(!newCard) {
-      alert("No more cards in deck");
-      return;
-    }
-    if(deck_sun) {
-      copyTable.deck_sun = deck as Sun_Card[];
-    } else if(deck_moon) {
-      copyTable.deck_moon = deck as Moon_Card[];
-    }
-    return newCard;
-  };
+  }; 
 
   const onConfirmNewCardSelection = (
     player_id: string, 
     newCardSun?: Sun_Card, 
     newCardMoon?: Moon_Card,
-    from?: "deck_sun" | "deck_moon" | "open_sun" | "open_moon",
+    from?: "deck_sun" | "deck_moon" | "open_sun" | "open_moon" | "hand_sun" | "hand_moon", 
   ) => {
     if(!table) {
       alert("Table not found");
@@ -163,7 +143,7 @@ export function useGameManager() {
     }
     const userHand = table.user_hands_state.find((hand) => hand.player_id === player_id);
     if(!userHand) {
-      console.log("User hand not found");
+      alert("User hand not found");
       return;
     }
     const move: Move = {
@@ -182,11 +162,17 @@ export function useGameManager() {
 
     const copyTable = { ...table };
 
+    alert("from " + from);
     // Update Open Cards
-    if(newCardSun && move.prev_card_sun) {
-      copyTable.open_cards_sun.push(move.prev_card_sun as Sun_Card);
-    } else if(newCardMoon) {
-      copyTable.open_cards_moon.push(move.prev_card_moon as Moon_Card);
+    if(from === "deck_sun" || from === "deck_moon" || from === "open_moon" || from === "open_sun") {
+      const card = from === "deck_sun" ? move.prev_card_sun : move.prev_card_moon;
+      if(from === "deck_moon" || from === "deck_sun") {
+        const _ = from === "deck_sun" ? copyTable.deck_sun.pop() : copyTable.deck_moon.pop();
+      }
+      copyTable[from === "deck_sun" ? "open_cards_sun" : "open_cards_moon"].push(card as Sun_Card & Moon_Card);
+    }  else if(from === "hand_sun" || from === "hand_moon") {
+      const card = from === "hand_sun" ? copyTable.deck_sun.pop() : copyTable.deck_moon.pop();
+      copyTable[from === "hand_sun" ? "open_cards_sun" : "open_cards_moon"].push(card as Sun_Card & Moon_Card);
     }
 
     copyTable.user_hands_state = copyTable.user_hands_state.map((hand) => {
@@ -197,12 +183,13 @@ export function useGameManager() {
             card_sun: newCardSun ?? hand.hand.card_sun,
             card_moon: newCardMoon ?? hand.hand.card_moon,
           },
+          tokens: hand.tokens - 1,
         };
       }
       return hand;
     }); 
 
-    copyTable.moves.push(move); 
+    copyTable.moves.push(move);     
 
     const nextPlayer = searchForNextPlayer(copyTable.rotation_direction, userHand?.position ?? "bottom", copyTable);
     if(!nextPlayer) {
@@ -296,6 +283,6 @@ export function useGameManager() {
   const userLost = () => {
     console.log("User lost");
   };  
-  return { table, startGame, userStand, playerLeave, selectDeckCard, onConfirmNewCardSelection };
+  return { table, startGame, userStand, playerLeave, onConfirmNewCardSelection };
 };
   
