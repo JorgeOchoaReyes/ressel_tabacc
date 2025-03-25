@@ -132,20 +132,48 @@ export function useGameManager() {
   }; 
 
   const onConfirmNewCardSelection = (
-    player_id: string, 
-    newCardSun?: Sun_Card, 
-    newCardMoon?: Moon_Card,
-    from?: "deck_sun" | "deck_moon" | "open_sun" | "open_moon" | "hand_sun" | "hand_moon", 
+    player_id: string,  
+    from: "deck_sun" | "deck_moon" | "open_sun" | "open_moon", 
+    chosen: "deck_sun" | "deck_moon" | "open_sun" | "open_moon" | "hand_sun" | "hand_moon"
   ) => {
     if(!table) {
       alert("Table not found");
       return;
     }
-    const userHand = table.user_hands_state.find((hand) => hand.player_id === player_id);
+    const copyTable = { ...table };
+    const userHand = copyTable.user_hands_state.find((hand) => hand.player_id === player_id);
     if(!userHand) {
       alert("User hand not found");
       return;
     }
+    let newCardSun: Sun_Card | null = null;
+    let newCardMoon: Moon_Card | null = null;
+
+    // Update Open Cards
+    if(chosen === "deck_sun" || chosen === "deck_moon" || chosen === "open_moon" || chosen === "open_sun") {
+      const checktype = chosen === "deck_sun" || chosen === "open_sun";
+      const card = (checktype ? userHand.hand.card_sun : userHand.hand.card_moon) as Sun_Card & Moon_Card;
+      if(chosen === "deck_moon" || chosen === "deck_sun") {
+        newCardMoon = chosen === "deck_moon" ? copyTable.deck_moon.pop() ?? null : null;
+        newCardSun = from === "deck_sun" ? copyTable.deck_sun.pop() ?? null : null;
+      } else if(chosen === "open_moon" || chosen === "open_sun") {
+        newCardMoon = chosen === "open_moon" ? copyTable.open_cards_moon.pop() ?? null : null;
+        newCardSun = chosen === "open_sun" ? copyTable.open_cards_sun.pop() ?? null : null;
+      }
+      copyTable[checktype ? "open_cards_sun" : "open_cards_moon"].push(card);
+    }  
+    else if(chosen === "hand_sun" || chosen === "hand_moon") {
+      let card = null; 
+      if(chosen === "hand_sun" && from === "deck_sun") { 
+        card = from === "deck_sun" ? copyTable.deck_sun.pop() ?? null : null;
+      } else if(chosen === "hand_moon" && from === "deck_moon") { 
+        card = from === "deck_moon" ? copyTable.deck_moon.pop() ?? null : null;
+      } else {
+        card = chosen === "hand_sun" ? copyTable.open_cards_sun.pop() ?? null : copyTable.open_cards_moon.pop() ?? null;
+      }
+      copyTable[chosen === "hand_sun" ? "open_cards_sun" : "open_cards_moon"].push(card as Sun_Card & Moon_Card);
+    }
+
     const move: Move = {
       player_id: player_id,
       prev_card_sun: userHand.hand.card_sun,
@@ -159,21 +187,6 @@ export function useGameManager() {
       new_tokens: 1,
       timestamp: new Date().getTime(),
     };
-
-    const copyTable = { ...table };
-
-    alert("from " + from);
-    // Update Open Cards
-    if(from === "deck_sun" || from === "deck_moon" || from === "open_moon" || from === "open_sun") {
-      const card = from === "deck_sun" ? move.prev_card_sun : move.prev_card_moon;
-      if(from === "deck_moon" || from === "deck_sun") {
-        const _ = from === "deck_sun" ? copyTable.deck_sun.pop() : copyTable.deck_moon.pop();
-      }
-      copyTable[from === "deck_sun" ? "open_cards_sun" : "open_cards_moon"].push(card as Sun_Card & Moon_Card);
-    }  else if(from === "hand_sun" || from === "hand_moon") {
-      const card = from === "hand_sun" ? copyTable.deck_sun.pop() : copyTable.deck_moon.pop();
-      copyTable[from === "hand_sun" ? "open_cards_sun" : "open_cards_moon"].push(card as Sun_Card & Moon_Card);
-    }
 
     copyTable.user_hands_state = copyTable.user_hands_state.map((hand) => {
       if(hand.player_id === player_id) {
