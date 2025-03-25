@@ -57,13 +57,15 @@ export default function Home(){
   });
 
   const [userView, setUserView] = React.useState<{
-    deckSelecting: "sun" | "moon" | null;
     selectingCard: boolean;
     cardChosen: Sun_Card | Moon_Card | null;
+    from: "deck_sun" | "deck_moon" | "open_sun" | "open_moon" | null;
+    chosen: "deck_sun" | "deck_moon" | "open_sun" | "open_moon" | "hand_sun" | "hand_moon" | null;
   }>({
-    deckSelecting: null,
+    from: null,
+    chosen: null,
     selectingCard: false,
-    cardChosen: null
+    cardChosen: null, 
   });
 
   return (
@@ -111,6 +113,10 @@ export default function Home(){
                     openMoonCard={table.open_cards_moon[table.open_cards_moon.length - 1] ?? "moon_back"} 
                     openSunCard={table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"}  
                     onClickDeckCards={(sun?: boolean, moon?: boolean) => {
+                      if(userView.from === "deck_sun" || userView.from === "deck_moon") {
+                        alert("You are already selecting a card");
+                        return;
+                      }
                       if(sun) {
                         onClickDeckMoveFreeCardToDeckCard(
                           "deck_sun_card",
@@ -120,8 +126,10 @@ export default function Home(){
                         );
                         setUserView((prev) => ({
                           ...prev,
-                          deckSelecting: "sun",
-                          selectingCard: true
+                          from: "deck_sun",
+                          chosen: "deck_sun",
+                          cardChosen: table.deck_sun[table.deck_sun.length - 1] ?? "sun_back",
+                          selectingCard: true, 
                         }));
                       } else if(moon) {
                         onClickDeckMoveFreeCardToDeckCard(
@@ -132,8 +140,34 @@ export default function Home(){
                         );
                         setUserView((prev) => ({
                           ...prev,
-                          deckSelecting: "moon",
-                          selectingCard: true
+                          from: "deck_moon",
+                          chosen: "deck_moon",
+                          cardChosen: table.deck_moon[table.deck_moon.length - 1] ?? "moon_back",
+                          selectingCard: true,
+                          
+                        }));
+                      }
+                    }}
+                    onClickOpenCards={(sun?: boolean, moon?: boolean) => {
+                      if(userView.from === "deck_moon" || userView.from === "deck_sun") {
+                        alert("You are already selecting a card");
+                        return;
+                      }
+                      if(sun) {  
+                        setUserView((prev) => ({
+                          ...prev,
+                          from: "open_sun",
+                          chosen: "open_sun",
+                          selectingCard: true,
+                          cardChosen: table.open_cards_sun[table.open_cards_sun.length - 1] ?? "sun_back"
+                        }));
+                      } else if(moon) { 
+                        setUserView((prev) => ({
+                          ...prev,
+                          from: "open_moon",
+                          chosen: "open_moon",
+                          selectingCard: true,
+                          cardChosen: table.open_cards_moon[table.open_cards_moon.length - 1] ?? "moon_back"
                         }));
                       }
                     }}
@@ -157,12 +191,14 @@ export default function Home(){
                       onClickOnSelectingCard={(card: Moon_Card | Sun_Card) => {
                         setUserView((prev) => ({
                           ...prev,
-                          cardChosen: card
+                          cardChosen: card,
+                          chosen: card.includes("sun") ? "hand_sun" : "hand_moon",
+                          selectingCard: true,
                         }));
                       }}
                     />
                     <div className="flex flex-row mt-auto"> 
-                      <Token /> 
+                      <Token total={table.user_hands_state.find((u) => u.player_id === "1")?.tokens} /> 
                     </div>
                   </div>
                   <PlayerOptions
@@ -178,20 +214,22 @@ export default function Home(){
                     selectingACard={userView.selectingCard} 
                     cardSelecting={userView.cardChosen ?? "sun_back"}
                     onConfirmNewCardSelection={() => {
-                      const cardType = userView.cardChosen?.includes("sun") ? "sun" : "moon";
                       if(!userView.cardChosen) {
                         alert("No card selected");
                         return;
                       }
+
                       onConfirmNewCardSelection(
-                        table.current_users_turn_id, 
-                        cardType === "sun" ? userView.cardChosen as Sun_Card : undefined,
-                        cardType === "moon" ? userView.cardChosen as Moon_Card : undefined,
+                        table.current_users_turn_id,  
+                        userView.from ?? "open_sun",
+                        userView.chosen ?? "hand_sun"
                       );
                       setUserView((prev) => ({
                         ...prev,
                         selectingCard: false,
-                        cardChosen: null
+                        cardChosen: null,
+                        chohsen: null,
+                        from: null
                       }));
                       freeCardHideAndOutOfWindowView(cardRefs.freeCardRef);
                     }}
@@ -219,13 +257,15 @@ export default function Home(){
               onClickOnSelectingCard={(card: Moon_Card | Sun_Card) => {
                 setUserView((prev) => ({
                   ...prev,
-                  cardChosen: card
+                  cardChosen: card, 
+                  from: card.includes("sun") ? "deck_sun" : "deck_moon",
+                  chosen: card.includes("sun") ? "deck_sun" : "deck_moon",
+                  selectingCard: true
                 }));
               }}
               card={ 
-                userView.deckSelecting === "sun" ? 
+                (userView.from?.includes("sun")) ? 
                   table?.deck_sun ? table?.deck_sun[table?.deck_sun.length - 1] : "sun_back" : 
-              
                   table?.deck_moon ? table?.deck_moon[table?.deck_moon.length - 1] : "moon_back"
               } />
           </motion.div>
