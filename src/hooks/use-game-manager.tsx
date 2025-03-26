@@ -128,8 +128,28 @@ export function useGameManager() {
   };
 
   const endRound = () => {
-    console.log("End round");
+    // end round 
+    if(!table) {
+      alert("Table not found");
+      return;
+    }
+
+
+    const hands = table.user_hands_state;
+
   }; 
+
+  const incrementTurn = (playerId: string): number => { 
+    if(!table) {
+      alert("Table not found");
+      return 0;
+    }
+    let turn = table.turn; 
+    if(table.end_player_id === playerId) {
+      turn++;
+    }
+    return turn;
+  };
 
   const onConfirmNewCardSelection = (
     player_id: string,  
@@ -174,6 +194,7 @@ export function useGameManager() {
       copyTable[chosen === "hand_sun" ? "open_cards_sun" : "open_cards_moon"].push(card as Sun_Card & Moon_Card);
     }
 
+    // Create user move 
     const move: Move = {
       player_id: player_id,
       prev_card_sun: userHand.hand.card_sun,
@@ -188,6 +209,7 @@ export function useGameManager() {
       timestamp: new Date().getTime(),
     };
 
+    // Update users hand with hand changes and tokens 
     copyTable.user_hands_state = copyTable.user_hands_state.map((hand) => {
       if(hand.player_id === player_id) {
         return {
@@ -203,25 +225,32 @@ export function useGameManager() {
     }); 
 
     copyTable.moves.push(move);     
-
     const nextPlayer = searchForNextPlayer(copyTable.rotation_direction, userHand?.position ?? "bottom", copyTable);
     if(!nextPlayer) {
       console.log("Next player not found");
       return;
     }
-    copyTable.current_users_turn_id = nextPlayer.player_id;
-    copyTable.turn++; 
-    setTable(copyTable);
+    const turn = incrementTurn(player_id);
+    copyTable.turn = turn;
+    copyTable.current_users_turn_id = nextPlayer.player_id; 
+    setTable(copyTable); 
+  };
 
+  const peekDeck = (from: "sun" | "moon"): Sun_Card | Moon_Card | null => {
+    const deck = from === "sun" ? table?.deck_sun : table?.deck_moon;
+    if(!deck) {
+      return null;
+    }
+    return deck[deck.length - 1] ?? null;
   };
  
-  const userStand = (userId: string) => {
+  const userStand = (player_id: string) => {
     if(!table) {
       alert("Table not found");
       return;
     } 
     const copyTable = { ...table };
-    const userHand = table.user_hands_state.find((hand) => hand.player_id === userId);
+    const userHand = table.user_hands_state.find((hand) => hand.player_id === player_id);
     if(!userHand) {
       console.log("User hand not found");
       return;
@@ -239,10 +268,7 @@ export function useGameManager() {
       new_tokens: userHand.tokens,
       timestamp: new Date().getTime(),
     }; 
-    let turn = copyTable.turn; 
-    if(table.end_player_id === userId) {
-      turn++; 
-    }
+    const turn = incrementTurn(player_id);
     copyTable.turn = turn;
     copyTable.moves.push(move);
     const nextPlayer = searchForNextPlayer(copyTable.rotation_direction, userHand.position, copyTable);
@@ -274,6 +300,11 @@ export function useGameManager() {
       return;
     }
     copyTable.current_users_turn_id = findNextPlayer?.player_id;
+    if(copyTable.end_player_id === userId) {
+      const turn = incrementTurn(userId);
+      copyTable.turn = turn;
+      copyTable.end_player_id = findNextPlayer?.player_id;
+    }
     
     copyTable.players = copyTable?.players?.filter((player) => player.player_id !== userId);
     copyTable.user_hands_state = copyTable?.user_hands_state?.filter((hand) => hand.player_id !== userId);
@@ -296,6 +327,6 @@ export function useGameManager() {
   const userLost = () => {
     console.log("User lost");
   };  
-  return { table, startGame, userStand, playerLeave, onConfirmNewCardSelection };
+  return { table, startGame, userStand, playerLeave, onConfirmNewCardSelection, peekDeck };
 };
   
