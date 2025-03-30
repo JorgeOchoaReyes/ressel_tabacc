@@ -86,8 +86,7 @@ export default function Home(){
               table?.round === 3 ?  <>
                 Results: 
               </> : 
-                <>
-                In progress
+                <> 
                 </>
             }
           </div>
@@ -231,8 +230,7 @@ export default function Home(){
                       if(!userView.cardChosen) {
                         alert("No card selected");
                         return;
-                      }
-
+                      } 
                       onConfirmNewCardSelection(
                         table.current_users_turn_id,  
                         userView.from ?? "open_sun",
@@ -258,8 +256,7 @@ export default function Home(){
               </div>
           } 
         </FadeInSlide>
-        {
-          // Free Card Space
+        { 
           <motion.div 
             ref={cardRefs.freeCardRef} 
             drag 
