@@ -55,6 +55,19 @@ export type GameState = "new" | "playing" | "ended";
 
 export type RotationDirection = "clockwise" | "counter-clockwise";
 
+export type RoundResults = {
+  round: number;
+  player_id: string;
+  player_name: string;
+  winner: boolean;
+  sun_card: Sun_Card;
+  moon_card: Moon_Card;
+  loss_tokens: number;
+  gain_tokens: number; 
+  prev_tokens: number;
+  new_tokens: number;
+}
+
 export type Ressel_Tabacc_Table = {
   table_name: string; 
   table_id: number;
@@ -83,6 +96,8 @@ export type Ressel_Tabacc_Table = {
 
   players: Player[];
   current_users_turn_id: string;
+
+  round_winners: RoundResults[];
 };
  
 export const sun_cards = [

@@ -77,6 +77,20 @@ export default function Home(){
           }}>
             <ArrowLeft size={64} />
           </Button>  
+          <div className="fixed top-5 left-[5rem] border-[#9dfaee] p-4 bg-[#302d25] h-24 w-80 rounded-xl"> 
+            <div className="text-[#9dfaee] text-start flex justify-between w-full">  
+              <div> Scoreboard {id}    </div>          
+            </div>
+            <hr className="bg-[#9dfaee] h-[2px]" /> 
+            {
+              table?.round === 3 ?  <>
+                Results: 
+              </> : 
+                <> 
+                </>
+            }
+          </div>
+
           <div className="fixed top-5 right-[5rem] border-[#9dfaee] p-4 bg-[#302d25] h-24 w-80 rounded-xl"> 
             <div className="text-[#9dfaee] text-start flex justify-between w-full">  
               <div> Table ID: {id}    </div>         
@@ -143,8 +157,7 @@ export default function Home(){
                           from: "deck_moon",
                           chosen: "deck_moon",
                           cardChosen: table.deck_moon[table.deck_moon.length - 1] ?? "moon_back",
-                          selectingCard: true,
-                          
+                          selectingCard: true, 
                         }));
                       }
                     }}
@@ -217,8 +230,7 @@ export default function Home(){
                       if(!userView.cardChosen) {
                         alert("No card selected");
                         return;
-                      }
-
+                      } 
                       onConfirmNewCardSelection(
                         table.current_users_turn_id,  
                         userView.from ?? "open_sun",
@@ -244,8 +256,7 @@ export default function Home(){
               </div>
           } 
         </FadeInSlide>
-        {
-          // Free Card Space
+        { 
           <motion.div 
             ref={cardRefs.freeCardRef} 
             drag 
